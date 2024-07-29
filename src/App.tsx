@@ -16,11 +16,12 @@ function App() {
   const [newTodo, setNewTodo] = useState("");
   const [editTodo, setEditTodo] = useState<Todo | null>(null);
   const [showLoader, setShowLoader] = useState(false);
+  // mark the todo for editing
   const startEditing = (todo: Todo) => {
     setEditTodo(todo);
     setNewTodo(todo.title);
   };
-
+  // make put request to update the todo
   const updateTodo = async (todo: Todo) => {
     const body = {
       ...(editTodo as Todo),
@@ -37,7 +38,7 @@ function App() {
       );
       setEditTodo(null);
       setNewTodo("");
-      setShowLoader(false)
+      setShowLoader(false);
       return;
     }
     setShowLoader(true);
@@ -68,6 +69,7 @@ function App() {
         setShowLoader(false);
       });
   };
+  // make delete request to delete the todo
   const deleteTodo = async (id: number) => {
     setShowLoader(true);
     axios
@@ -88,6 +90,7 @@ function App() {
         setShowLoader(false);
       });
   };
+  // make put request to toggle completion status
   const toggleCompleted = async (todo: Todo) => {
     const body = {
       ...todo,
@@ -130,8 +133,8 @@ function App() {
         setShowLoader(false);
       });
   };
+  // make post request add a new todo
   const addTodo = async () => {
-    // Make a request for a user with a given ID
     if (!newTodo.trim()) {
       errorAlert("Title is empty");
       return;
@@ -166,8 +169,8 @@ function App() {
         setShowLoader(false);
       });
   };
+  // load all todos at onece page loaded
   const loadTodos = async () => {
-    // Make a request for a user with a given ID
     setShowLoader(true);
     axios
       .get("https://jsonplaceholder.typicode.com/todos")
@@ -192,11 +195,13 @@ function App() {
 
   return (
     <>
+      {/* conditionally show loader */}
       {showLoader && (
         <div className="relative">
           <Loader />
         </div>
       )}
+      {/* dont allow any other click functionality when api requet is going on */}
       <div
         style={{ pointerEvents: showLoader ? "none" : "auto" }}
         className="h-100 w-full flex items-center justify-center bg-teal-lightest font-sans"
